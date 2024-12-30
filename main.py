@@ -23,12 +23,12 @@ def main():
 
                 # File input chosen
                 if textType == "F":
-                    inType = inputFile()
+                    inText = inputFile()
                     break
 
                 # Text input chosen
                 elif textType == "T":
-                    inType = inputText()
+                    inText = inputText()
                     break
 
                 # Invalid input, try again
@@ -36,7 +36,10 @@ def main():
                     print("Invalid, please try again.")
 
             # Run encryption on input
-            encrypt(inType)
+            if inText:
+                encrypt(inText)
+
+            # End script
             break
 
         # Decryption chosen
@@ -48,12 +51,12 @@ def main():
 
                 # File input chosen
                 if textType == "F":
-                    inType = inputFile()
+                    inText = inputFile()
                     break
 
                 # Text input chosen
                 elif textType == "T":
-                    inType = inputText()
+                    inText = inputText()
                     break
 
                 # Invalid input, try again
@@ -61,39 +64,78 @@ def main():
                     print("Invalid, please try again.")
 
             # Run decryption on input
-            decrypt(inType)
+            if inText:
+                decrypt(inText)
+            
+            # End script
             break
 
         # Invalid function type, retry
         else:
             print("Invalid, please try again.")
 
+"""
+Prompts user to input text version of a journal to encrypt or decrypt.
+Processes inputted text until 'endchat' line is inputted.
+Returns a string representing the entire journal or None if script ended.
+"""
 def inputText():
+    # Init array of lines
     lines = []
-    print("Enter text, 'endchat' to finish:")
 
+    # Prompt user to enter text
+    print("Enter text, '\\n + endchat' to finish:")
+
+    # Read user's inputted lines
     try:
+        # Loops until input is terminated
         while True:
             line = input()
 
+            # Terminate input
             if line == "endchat":
                 if lines:
-                    print("\nInput stopped. You typed:\n")
-                    print("\n".join(lines))
-                else:
-                    print("\nNothing was inputted...")
+                    print("\nInput terminated.")
+                    separator = "\n"
+                    journal = separator.join(lines)
+                    break
                 
-                break
-                    
+                # If nothing was inputted, keyboard interrupt
+                else:
+                    raise KeyboardInterrupt
+            
+            # Input not terminated, read line and continue
             lines.append(line)
 
+    # KeyboardInterrupt caught, respond accordingly
     except KeyboardInterrupt:
+        # If lines have been read, inform user of final line loss
         if lines:
             print("\nInput stopped. Final line potentially lost. You typed:\n")
             print("\n".join(lines))
+            while True:
+                proceed = input("Would you like to proceed (P) or retry (R)?")
+                if proceed == "P":
+                    separator = "\n"
+                    journal = separator.join(lines)
+                    break
+                elif proceed == "R":
+                    inputText()
+                else:
+                    print("Invalid decision, please try again.")
+        
+        # If no lines read, end script
         else:
             print("\nNothing was inputted...")
+            journal = None
 
+    return journal
+
+"""
+Prompts user to input file version of a journal to encrypt or decrypt.
+Processes inputted file until EOF.
+Returns a string representing the entire journal.
+"""
 def inputFile():
     print("inputFile called")
 
