@@ -15,19 +15,19 @@ def main():
         funcType = input("Type E to encrypt and D to decrypt: ")
 
         # Encryption chosen
-        if funcType == "E":
+        if funcType == "E" or funcType == "e":
             # Loops until valid input type chosen
             while True:
                 print("You have chosen to encrypt your journal.")
-                textType = input("Type F to input file and T to input text.")
+                textType = input("Type F to input file and T to input text: ")
 
                 # File input chosen
-                if textType == "F":
+                if textType == "F" or textType == "f":
                     inText = inputFile()
                     break
 
                 # Text input chosen
-                elif textType == "T":
+                elif textType == "T" or textType == "t":
                     inText = inputText()
                     break
 
@@ -43,19 +43,19 @@ def main():
             break
 
         # Decryption chosen
-        elif funcType == "D":
+        elif funcType == "D" or funcType == "d":
             # Loops until valid input type chosen
             while True:
                 print("You have chosen to decrypt your journal.")
                 textType = input("Type F to input file and T to input text.")
 
                 # File input chosen
-                if textType == "F":
+                if textType == "F" or textType == "f":
                     inText = inputFile()
                     break
 
                 # Text input chosen
-                elif textType == "T":
+                elif textType == "T" or textType == "t":
                     inText = inputText()
                     break
 
@@ -133,16 +133,41 @@ def inputText():
 
 """
 Prompts user to input file version of a journal to encrypt or decrypt.
-Processes inputted file until EOF.
+Processes inputted file.
 Returns a string representing the entire journal.
 """
 def inputFile():
-    print("inputFile called")
+    # Loops until file is successfully read
+    while True:
+        try:
+            # Prompt user for a file name or path
+            file_path = input("Enter the file path to open: ")
 
-def encrypt():
+            # Open the file in read mode
+            with open(file_path, 'r') as file:
+                journal = file.read()
+            
+            break
+
+        except FileNotFoundError:
+            print("File not found. Please check the path and try again.")
+            journal = None
+            continue
+
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            raise KeyboardInterrupt
+
+        except KeyboardInterrupt:
+            journal = None
+            break
+
+    return journal
+
+def encrypt(text):
     print("encrypt called")
 
-def decrypt():
+def decrypt(text):
     print("decrypt called")
 
 if __name__ == "__main__":
