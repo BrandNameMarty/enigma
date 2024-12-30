@@ -1,44 +1,70 @@
-# Creating a journal encryptor / decryptor
+# A journal encryptor and decryptor
 import sys
 
+"""
+The skeleton function for the journal encryptor / decryptor.
+Prompts the user to choose to encrypt or decrypt.
+Then prompts the user to choose to input a file or raw text.
+Will return a newly encrypted or decrypted .txt file with a corresponding
+file name (ex: journal.txt --> encrypted_journal.txt).
+"""
 def main():
+    # Loops until valid function type is chosen
     while True:
+        # Prompt for function type
         funcType = input("Type E to encrypt and D to decrypt: ")
 
+        # Encryption chosen
         if funcType == "E":
+            # Loops until valid input type chosen
             while True:
                 print("You have chosen to encrypt your journal.")
                 textType = input("Type F to input file and T to input text.")
 
+                # File input chosen
                 if textType == "F":
-                    text = inputFile()
+                    inType = inputFile()
                     break
+
+                # Text input chosen
                 elif textType == "T":
-                    text = inputText()
+                    inType = inputText()
                     break
+
+                # Invalid input, try again
                 else:
                     print("Invalid, please try again.")
 
-            encrypt(text)
+            # Run encryption on input
+            encrypt(inType)
             break
 
+        # Decryption chosen
         elif funcType == "D":
+            # Loops until valid input type chosen
             while True:
                 print("You have chosen to decrypt your journal.")
                 textType = input("Type F to input file and T to input text.")
 
+                # File input chosen
                 if textType == "F":
-                    text = inputFile()
+                    inType = inputFile()
                     break
+
+                # Text input chosen
                 elif textType == "T":
-                    text = inputText()
+                    inType = inputText()
                     break
+
+                # Invalid input, try again
                 else:
                     print("Invalid, please try again.")
 
-            decrypt(text)
+            # Run decryption on input
+            decrypt(inType)
             break
 
+        # Invalid function type, retry
         else:
             print("Invalid, please try again.")
 
