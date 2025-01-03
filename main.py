@@ -1,5 +1,9 @@
 # A journal encryptor and decryptor
-import sys
+import random
+
+# Defining global variables
+asciiChars = ''.join(chr(i) for i in range(32, 127))
+fileName = ""
 
 """
 The skeleton function for the journal encryptor / decryptor.
@@ -12,14 +16,14 @@ def main():
     # Loops until valid function type is chosen
     while True:
         # Prompt for function type
-        funcType = input("Type E to encrypt and D to decrypt: ")
+        funcType = input("Type E to encrypt or D to decrypt: ")
 
         # Encryption chosen
         if funcType == "E" or funcType == "e":
             # Loops until valid input type chosen
             while True:
                 print("You have chosen to encrypt your journal.")
-                textType = input("Type F to input file and T to input text: ")
+                textType = input("Type F to input file or T to input text: ")
 
                 # File input chosen
                 if textType == "F" or textType == "f":
@@ -47,7 +51,7 @@ def main():
             # Loops until valid input type chosen
             while True:
                 print("You have chosen to decrypt your journal.")
-                textType = input("Type F to input file and T to input text.")
+                textType = input("Type F to input file or T to input text.")
 
                 # File input chosen
                 if textType == "F" or textType == "f":
@@ -84,7 +88,7 @@ def inputText():
     lines = []
 
     # Prompt user to enter text
-    print("Enter text, '\\n + endchat' to finish:")
+    print("Enter text, 'endchat + \\n' to finish:")
 
     # Read user's inputted lines
     try:
@@ -146,6 +150,7 @@ def inputFile():
             # Open the file in read mode
             with open(file_path, 'r') as file:
                 journal = file.read()
+                fileName = file_path
             
             break
 
@@ -164,8 +169,59 @@ def inputFile():
 
     return journal
 
+"""
+Encrypts inputted text, prepending a number that corresponds to some cryptic key.
+Expects as input a string to be encrypted.
+Creates an encrypted file with corresponding name (ex: journal.txt --> encrypted_journal.txt).
+"""
 def encrypt(text):
-    print("encrypt called")
+    randAscii = str(random.shuffle(list(asciiChars)))
+    index = 0
+
+    # Try to read and see if randAscii already exists in the keys
+    try:
+        # Read keys and split them by new line
+        with open("keys.txt", 'r') as file:
+            keys = file.read()
+        keys.split("\n")
+
+        # See if randAscii already exists in keys
+        for key in keys:
+            if key == randAscii:
+                break
+            index += 1
+
+        # randAscii does not yet exist
+        if index == len(keys):
+            raise FileNotFoundError
+    
+    except FileNotFoundError: # If file does not yet exist
+        try:
+            with open("keys.txt", 'w') as file:
+                file.write(f"{randAscii}\n")
+
+        except Exception as e:
+            print(f"Failed to create keys file: {e}")
+
+    # randAscii is now logged in keys @ index
+
+    # Mapping ASCII values to shuffled values
+    keyDict = {key: value for key, value in zip(asciiChars, randAscii)}
+
+    # Encrypting text with first line representing the index of the key
+    encrypted = f"{index}\n"
+    for c in text:
+        n = keyDict[c]
+        encrypted = f"{encrypted}n"
+
+    # Creating new encrypted file using given name
+    
+    # If no file name yet given, ask for one
+    if fileName == "":
+        fileName = input("Name your new file: ")
+
+    with open(f"encrypted_{fileName}", 'w') as file:
+        file.write(encrypted)
 
 def decrypt(text):
     print("decrypt called")
