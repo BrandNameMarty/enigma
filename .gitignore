@@ -1,1 +1,5 @@
-keys.txt
+# Ignore all .txt files
+*.txt
+
+# Ignore cache
+__pycache__/
